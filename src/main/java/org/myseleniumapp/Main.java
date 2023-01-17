@@ -27,9 +27,13 @@ public class Main {
         int numberOfBrowsersToSpawn = Integer.parseInt(args[2]);
         String chromeDriverLocation = args[3];
 
+        int userIDNumber = 100;
 
 
         for(int i = 0; i < numberOfBrowsersToSpawn; i++){
+
+            final int threadLocaluserIDNumber = userIDNumber;
+            userIDNumber++;
 
             new Thread(new Runnable() {
                 WebDriver webDriver = null;
@@ -56,9 +60,15 @@ public class Main {
 
                         sleep(10000);
 
-                        int randUserNumber = getRandomNumForUserLogin();
-                        String USERNAME = "my-username-" + randUserNumber;
-                        String PASSWORD = "my-password-" + randUserNumber;
+//                        int randUserNumber = getRandomNumForUserLogin();
+//                        String USERNAME = "my-username-" + userIDNumber;
+//                        String PASSWORD = "my-password-" + userIDNumber;
+//                        userIDNumber++;
+
+
+                        String USERNAME = "my-username-for-data-" + threadLocaluserIDNumber;
+                        String PASSWORD = "my-password-for-data-" + threadLocaluserIDNumber;
+
 
                         webDriver.findElement(By.name("username")).sendKeys(USERNAME);
                         webDriver.findElement(By.name("password")).sendKeys(PASSWORD);
@@ -70,7 +80,7 @@ public class Main {
 
                         sleep(10000);
 
-                        if(shouldNavigateToSpace()){
+                        if(shouldNavigateToSpace(threadLocaluserIDNumber)){
                             webDriver.findElement(By.cssSelector("tr:nth-of-type(1) > th > .apps-manager-anchor > .anchor-text")).click();
                             sleep(10000);
                             webDriver.findElement(By.cssSelector("li:nth-of-type(4) > .apps-manager-anchor.mlxl.plxl.pvl > .anchor-text.type-ellipsis")).click();
@@ -100,13 +110,20 @@ public class Main {
         return new Random().nextInt(299980) + 15;
     }
 
-    static boolean shouldNavigateToSpace(){
-        int num = new Random().nextInt(10);
-        if (num < 5){
-            return false;
-        }else{
+//    static boolean shouldNavigateToSpace(){
+//        int num = new Random().nextInt(10);
+//        if (num < 5){
+//            return false;
+//        }else{
+//            return true;
+//        }
+//    }
+
+    static boolean shouldNavigateToSpace(int threadLocaluserIDNumber){
+        if(threadLocaluserIDNumber % 2 == 0)
             return true;
-        }
+        else
+            return false;
     }
 
     static void sleep(long millis){
